@@ -21,16 +21,22 @@ RUN ./venv/bin/pip install Babel==2.12.1 && ./venv/bin/python scripts/compile_lo
 
 FROM python:3.11.9-slim-bullseye
 
+ARG UID=1032
+ARG GID=1032
 ARG with_models=false
 ARG models=""
 
-RUN addgroup --system --gid 1032 libretranslate && adduser --system --uid 1032 libretranslate && mkdir -p /home/libretranslate/.local && chown -R libretranslate:libretranslate /home/libretranslate/.local
+RUN addgroup --system --gid ${GID} libretranslate && \
+    adduser --system --uid ${UID} libretranslate && \
+    mkdir -p /home/libretranslate/.local && \
+    chown -R libretranslate:libretranslate /home/libretranslate/.local
+
 USER libretranslate
 
-COPY --from=builder --chown=1032:1032 /app /app
+COPY --from=builder --chown=${UID}:${GID} /app /app
 WORKDIR /app
 
-COPY --from=builder --chown=1032:1032 /app/venv/bin/ltmanage /usr/bin/
+COPY --from=builder --chown=${UID}:${GID} /app/venv/bin/ltmanage /usr/bin/
 
 RUN if [ "$with_models" = "true" ]; then  \
   # initialize the language models
@@ -42,4 +48,4 @@ RUN if [ "$with_models" = "true" ]; then  \
   fi
 
 EXPOSE 5000
-ENTRYPOINT [ "./venv/bin/libretranslate", "--host", "*" ]
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]

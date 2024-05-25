@@ -165,6 +165,7 @@ def create_app(args):
 
     if not args.disable_files_translation:
         remove_translated_files.setup(get_upload_dir())
+    print("Loading languages...")
     languages = load_languages()
     language_pairs = {}
     for lang in languages:
