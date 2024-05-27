@@ -7,3 +7,6 @@ chart/
 *.yaml
 *.md
 !README.md
+.venv
+run.*
+__pycache__

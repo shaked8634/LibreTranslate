@@ -2,6 +2,8 @@
 import os
 import sys
 
+import config
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import json
 import re
@@ -24,12 +26,11 @@ if __name__ == "__main__":
         print("Error: English model not found. You need it to run this script.")
         exit(1)
 
-    locales_dir = os.path.join("libretranslate", "locales")
-    if not os.path.isdir(locales_dir):
-        os.makedirs(locales_dir)
+    if not os.path.isdir(config.locales_dir):
+        os.makedirs(config.locales_dir)
 
     # Dump language list so it gets picked up by pybabel
-    langs_file = os.path.join(locales_dir, ".langs.py")
+    langs_file = os.path.join(config.locales_dir, ".langs.py")
     with open(langs_file, 'w') as f:
         for l in languages:
             f.write("_(%s)\n" % json.dumps(l.name))
@@ -46,13 +47,13 @@ if __name__ == "__main__":
             swag_strings.append(s)
     swag_eval(swag, add_swag_string)
 
-    swag_file = os.path.join(locales_dir, ".swag.py")
+    swag_file = os.path.join(config.locales_dir, ".swag.py")
     with open(swag_file, 'w') as f:
         for ss in swag_strings:
             f.write("_(%s)\n" % json.dumps(ss))
     print("Wrote %s" % swag_file)
 
-    messagespot = os.path.join(locales_dir, "messages.pot")
+    messagespot = os.path.join(config.locales_dir, "messages.pot")
     print("Updating %s" % messagespot)
     sys.argv = ["", "extract", "-F", "babel.cfg", "-k", "_e _h",
                 "--copyright-holder", "LibreTranslate Authors",
@@ -66,13 +67,13 @@ if __name__ == "__main__":
     # Init/update
     for l in lang_codes:
         cmd = "init"
-        if os.path.isdir(os.path.join(locales_dir, l, "LC_MESSAGES")):
+        if os.path.isdir(os.path.join(config.locales_dir, l, "LC_MESSAGES")):
             cmd = "update"
 
-        sys.argv = ["", cmd, "-i", messagespot, "-d", locales_dir, "-l", l]
+        sys.argv = ["", cmd, "-i", messagespot, "-d", config.locales_dir, "-l", l]
         pybabel()
 
-        meta_file = os.path.join(locales_dir, l, "meta.json")
+        meta_file = os.path.join(config.locales_dir, l, "meta.json")
         if not os.path.isfile(meta_file):
             with open(meta_file, 'w') as f:
                 f.write(json.dumps({
@@ -98,7 +99,7 @@ if __name__ == "__main__":
 
         translator = en_lang.get_translation(tgt_lang)
 
-        messages_file = os.path.join(locales_dir, locale, "LC_MESSAGES", 'messages.po')
+        messages_file = os.path.join(config.locales_dir, locale, "LC_MESSAGES", 'messages.po')
         if os.path.isfile(messages_file):
             print("Translating '%s'" % locale)
             pofile = polib.pofile(messages_file)

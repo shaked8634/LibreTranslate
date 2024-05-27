@@ -28,7 +28,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10"
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
 ]
 dynamic = ["version"]
 
@@ -56,7 +58,8 @@ dependencies = [
     "prometheus-client ==0.15.0",
     "polib ==1.1.1",
     "packaging ==23.1",
-    "torch ==2.0.1"
+    "gunicorn ==22.0.0",
+    "Babel==2.12.1",
 ]
 
 [project.scripts]
@@ -86,11 +89,15 @@ artifacts = ["*.mo"]
 
 # ENVIRONMENTS AND SCRIPTS
 [tool.hatch.envs.default]
+type = "virtual"
+path = ".venv"
+
 features = [
     "test",
 ]
 post-install-commands = [
     "pre-commit install",
+    "pip install torch==2.2.0 --extra-index-url https://download.pytorch.org/whl/cpu"
 ]
 
 
@@ -112,7 +119,7 @@ cov = [
 
 
 [[tool.hatch.envs.all.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11"]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
 
 # TOOLS

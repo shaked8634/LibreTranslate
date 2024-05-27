@@ -2,6 +2,8 @@
 import os
 import sys
 
+import config
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from babel.messages.frontend import main as pybabel
 
@@ -13,17 +15,16 @@ if __name__ == "__main__":
         print("-------- | -------- | ------------")
 
         for l in locales:
-            link = "https://hosted.weblate.org/translate/libretranslate/app/%s/" % l['code']
+            link = config.locales_url + "%s/" % l['code']
             if l['code'] == 'en':
-                link = "https://hosted.weblate.org/projects/libretranslate/app/"
+                link = config.locales_url
             print("{} | {} | {}".format(l['name'], ':heavy_check_mark:' if l['reviewed'] else '', "[Edit](%s)" % link))
     else:
-        locales_dir = os.path.join("libretranslate", "locales")
-        if not os.path.isdir(locales_dir):
-            os.makedirs(locales_dir)
+        if not os.path.isdir(config.locales_dir):
+            os.makedirs(config.locales_dir)
 
         print("Compiling locales")
-        sys.argv = ["", "compile", "-f", "-d", locales_dir]
+        sys.argv = ["", "compile", "-f", "-d", config.locales_dir]
         pybabel()
 
 
