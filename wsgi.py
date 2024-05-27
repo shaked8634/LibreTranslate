@@ -16,7 +16,11 @@ def app(*args, **kwargs):
     instance = main()
 
     if len(kwargs) == 0:
+
         return instance(*args, **kwargs)
     else:
         return instance
 
+
+if __name__ == "__main__":
+    app()

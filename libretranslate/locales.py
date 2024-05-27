@@ -2,6 +2,7 @@ import json
 import os
 from functools import lru_cache
 
+import config
 from flask_babel import gettext as _
 from flask_babel import lazy_gettext as _lazy
 from markupsafe import Markup, escape
@@ -9,8 +10,7 @@ from markupsafe import Markup, escape
 
 @lru_cache(maxsize=None)
 def get_available_locales(only_reviewed=True, sort_by_name=False):
-    locales_dir = os.path.join(os.path.dirname(__file__), 'locales')
-    dirs = [os.path.join(locales_dir, d) for d in os.listdir(locales_dir)]
+    dirs = [os.path.join(config.locales_dir, d) for d in os.listdir(config.locales_dir)]
 
     res = [{'code': 'en', 'name': 'English', 'reviewed': True}]
 

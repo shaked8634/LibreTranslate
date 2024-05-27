@@ -26,6 +26,3 @@ if __name__ == "__main__":
         print("Compiling locales")
         sys.argv = ["", "compile", "-f", "-d", config.locales_dir]
         pybabel()
-
-
-
