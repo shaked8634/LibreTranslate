@@ -48,6 +48,8 @@ COPY --from=builder --chown=${UID}:${GID} /app/venv/bin/ltmanage /usr/bin/
 #  fi \
 #  fi
 
+ENV PYTHONPATH=/app
+
 EXPOSE 5000
-CMD ["top"]
-#ENTRYPOINT [ "./venv/bin/libretranslate", "--host", "*" ]
+#CMD ["top"]
+CMD ["sh", "/app/entrypoint.sh"]
